@@ -5,322 +5,124 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>vsharii - Bio</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0a0a0a; min-height: 100vh; display: flex; justify-content: center;
+            align-items: center; padding: 20px; position: relative; overflow: hidden; }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #0a0a0a;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            position: relative;
-            overflow: hidden;
-        }
+        .intro-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #0a0a0a; display: flex; justify-content: center; align-items: center;
+            z-index: 100; opacity: 1; visibility: visible;
+            transition: opacity 1.2s ease, visibility 1.2s ease; }
+        .intro-screen.fade-out { opacity: 0; visibility: hidden; }
+        .enter-button { padding: 30px 80px; font-size: 28px; font-weight: 600; color: #ffffff;
+            background: rgba(255, 255, 255, 0.1); border: 2px solid #ffffff; border-radius: 50px;
+            cursor: pointer; transition: all 0.3s ease; text-transform: uppercase;
+            letter-spacing: 3px; user-select: none; }
+        .enter-button:hover { background: rgba(255,255,255,0.2); transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(255,255,255,0.4); }
+        .enter-button:active { transform: scale(0.98); }
 
-        /* Экран приветствия */
-        .intro-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #0a0a0a;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            opacity: 1;
-            visibility: visible;
-            transition: opacity 1.2s ease, visibility 1.2s ease;
-        }
+        .main-content { opacity: 0; visibility: hidden; transition: opacity 1.8s ease 0.3s, visibility 0s 0.3s;
+            width: 100%; display: flex; justify-content: center; align-items: center; }
+        .main-content.visible { opacity: 1; visibility: visible; }
 
-        .intro-screen.fade-out {
-            opacity: 0;
-            visibility: hidden;
-        }
+        .video-background { position: fixed; top: 50%; left: 50%; min-width: 100%; min-height: 100%;
+            transform: translate(-50%, -50%); z-index: 0; filter: blur(8px); opacity: 0.4; object-fit: cover; }
 
-        .enter-button {
-            padding: 30px 80px;
-            font-size: 28px;
-            font-weight: 600;
-            color: #ffffff;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid #ffffff;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            user-select: none;
-        }
+        .container { background: rgba(26,26,26,0.85); backdrop-filter: blur(10px);
+            border: 1px solid #2a2a2a; border-radius: 30px; padding: 50px 40px; max-width: 500px; width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5); text-align: center; position: relative; z-index: 1; }
+        .avatar { width: 120px; height: 120px; border-radius: 50%; background: #2a2a2a; border: 2px solid #3a3a3a;
+            margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;
+            font-size: 48px; color: #ffffff; font-weight: bold; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
 
-        .enter-button:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.05);
-            box-shadow: 0 0 40px rgba(255, 255, 255, 0.4);
-        }
+        h1 { font-size: 32px; color: #ffffff; margin-bottom: 10px; }
+        .username { color: #888; font-size: 18px; margin-bottom: 30px; }
 
-        .enter-button:active {
-            transform: scale(0.98);
-        }
+        .social-links { display: flex; flex-direction: column; gap: 15px; }
+        .social-link { display: flex; align-items: center; padding: 18px 25px; background: #2a2a2a;
+            border: 1px solid #3a3a3a; border-radius: 15px; text-decoration: none; color: #fff; font-weight: 500;
+            transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .social-link:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(255,255,255,0.1);
+            border-color: #4a4a4a; background: #333; }
+        .social-link svg { width: 24px; height: 24px; margin-right: 15px; }
+        .social-link.telegram { background: linear-gradient(135deg,#0088cc,#00a6e3); border: none; }
+        .social-link.telegram:hover { background: linear-gradient(135deg,#0077b3,#0095cc); }
+        .social-link.soundcloud { background: linear-gradient(135deg,#ff5500,#ff7733); border: none; }
+        .social-link.soundcloud:hover { background: linear-gradient(135deg,#ee4400,#ff6622); }
 
-        /* Основной контент */
-        .main-content {
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 1.8s ease 0.3s, visibility 0s 0.3s;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .main-content.visible {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        /* Фоновое видео */
-        .video-background {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            min-width: 100%;
-            min-height: 100%;
-            width: auto;
-            height: auto;
-            transform: translate(-50%, -50%);
-            z-index: 0;
-            filter: blur(8px);
-            opacity: 0.4;
-            object-fit: cover;
-        }
-
-        .container {
-            background: rgba(26, 26, 26, 0.85);
-            backdrop-filter: blur(10px);
-            border: 1px solid #2a2a2a;
-            border-radius: 30px;
-            padding: 50px 40px;
-            max-width: 500px;
-            width: 100%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            text-align: center;
-            position: relative;
-            z-index: 1;
-        }
-
-        .avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: #2a2a2a;
-            border: 2px solid #3a3a3a;
-            margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            color: #ffffff;
-            font-weight: bold;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        h1 {
-            font-size: 32px;
-            color: #ffffff;
-            margin-bottom: 10px;
-        }
-
-        .username {
-            color: #888888;
-            font-size: 18px;
-            margin-bottom: 30px;
-        }
-
-        .social-links {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .social-link {
-            display: flex;
-            align-items: center;
-            padding: 18px 25px;
-            background: #2a2a2a;
-            border: 1px solid #3a3a3a;
-            border-radius: 15px;
-            text-decoration: none;
-            color: #ffffff;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .social-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.1);
-            border-color: #4a4a4a;
-            background: #333333;
-        }
-
-        .social-link svg {
-            width: 24px;
-            height: 24px;
-            margin-right: 15px;
-            flex-shrink: 0;
-        }
-
-        .social-link.telegram {
-            background: linear-gradient(135deg, #0088cc 0%, #00a6e3 100%);
-            color: white;
-            border: none;
-        }
-
-        .social-link.telegram:hover {
-            background: linear-gradient(135deg, #0077b3 0%, #0095cc 100%);
-        }
-
-        .social-link.soundcloud {
-            background: linear-gradient(135deg, #ff5500 0%, #ff7733 100%);
-            color: white;
-            border: none;
-        }
-
-        .social-link.soundcloud:hover {
-            background: linear-gradient(135deg, #ee4400 0%, #ff6622 100%);
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 40px 30px;
-            }
-
-            h1 {
-                font-size: 28px;
-            }
-
-            .avatar {
-                width: 100px;
-                height: 100px;
-                font-size: 40px;
-            }
-
-            .enter-button {
-                padding: 25px 60px;
-                font-size: 24px;
-            }
-        }
+        @media(max-width:480px){ .container{padding:40px 30px;} h1{font-size:28px;} .avatar{width:100px;height:100px;font-size:40px;} .enter-button{padding:25px 60px;font-size:24px;} }
     </style>
 </head>
 <body>
-    <!-- Экран приветствия -->
     <div class="intro-screen" id="introScreen">
         <button class="enter-button" id="enterBtn" type="button">нажми</button>
     </div>
 
-    <!-- Основной контент -->
     <div class="main-content" id="mainContent">
-        <!-- Фоновое видео (закомментировано пока не загрузите файл) -->
-        <!-- <video class="video-background" autoplay muted loop playsinline>
-            <source src="/background.mp4" type="video/mp4">
-        </video> -->
-
         <div class="container">
             <div class="avatar">V</div>
             <h1>vsharii</h1>
             <p class="username">@vsharii</p>
-            
+
+            <!-- Volume Slider -->
+            <div style="margin-top: 10px; margin-bottom: 25px; text-align:center;">
+                <label for="volumeSlider" style="color:white; font-size:14px;">Громкость музыки</label>
+                <input id="volumeSlider" type="range" min="0" max="1" step="0.01" value="0.5" style="width:100%; margin-top:10px;">
+            </div>
+
             <div class="social-links">
                 <a href="https://t.me/vsharii" class="social-link telegram" target="_blank">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
-                    </svg>
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
                     Telegram
                 </a>
 
                 <a href="#" class="social-link soundcloud" onclick="alert('Скоро здесь появится ссылка на SoundCloud!'); return false;">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M11.56 8.87V17h8.76c1.85 0 2.68-.37 2.68-2.47 0-2.07-1.42-3.08-3.26-3.08-.41 0-.91.07-1.21.14.17-2.2-1.17-4.34-3.29-4.72-1.44-.28-2.68.21-3.68 1.37v.63zm-1.5 7.31V10.8c0-.14-.07-.21-.21-.21s-.17.07-.17.21v5.38c0 .07.07.14.17.14.14 0 .21-.07.21-.14zm-1.02.07V9.89c0-.14-.07-.21-.21-.21s-.21.07-.21.21v6.36c0 .14.07.21.21.21s.21-.07.21-.21zm-1.09.07V9.13c0-.14-.07-.21-.21-.21s-.21.07-.21.21v7.19c0 .14.07.21.21.21s.21-.07.21-.21zm-1.02 0V8.45c0-.14-.07-.21-.21-.21s-.21.07-.21.21v7.87c0 .14.07.21.21.21s.21-.07.21-.21zm-1.09 0V9.2c0-.14-.07-.21-.21-.21s-.21.07-.21.21v7.12c0 .14.07.21.21.21s.21-.07.21-.21zm-1.02 0V10.25c0-.14-.07-.21-.21-.21s-.21.07-.21.21v6.07c0 .14.07.21.21.21s.21-.07.21-.21zm-1.09 0V11.1c0-.14-.07-.21-.21-.21s-.21.07-.21.21v5.22c0 .14.07.21.21.21s.21-.07.21-.21zm-1.02 0v-3.75c0-.14-.07-.21-.21-.21s-.21.07-.21.21v3.75c0 .14.07.21.21.21s.21-.07.21-.21z"/>
-                    </svg>
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.56 8.87V17h8.76c1.85 0 2.68-.37 2.68-2.47 0-2.07-1.42-3.08-3.26-3.08-.41 0-.91.07-1.21.14.17-2.2-1.17-4.34-3.29-4.72-1.44-.28-2.68.21-3.68 1.37v.63zm-1.5 7.31V10.8c0-.14-.07-.21-.21-.21s-.17.07-.17.21v5.38c0 .07.07.14.17.14.14 0 .21-.07.21-.14zm-1.02.07V9.89c0-.14-.07-.21-.21-.21s-.21.07-.21.21v6.36c0 .14.07.21.21.21s.21-.07.21-.21zm-1.09.07V9.13c0-.14-.07-.21-.21-.21s-.21.07-.21.21v7.19c0 .14.07.21.21.21s.21-.07.21-.21zm-1.02 0V8.45c0-.14-.07-.21-.21-.21s-.21.07-.21.21v7.87c0 .14.07.21.21.21s.21-.07.21-.21zm-1.09 0V9.2c0-.14-.07-.21-.21-.21s-.21.07-.21.21v7.12c0 .14.07.21.21.21s.21-.07.21-.21zm-1.02 0V10.25c0-.14-.07-.21-.21-.21s-.21.07-.21.21v6.07c0 .14.07.21.21.21s.21-.07.21-.21zm-1.09 0V11.1c0-.14-.07-.21-.21-.21s-.21.07-.21.21v5.22c0 .14.07.21.21.21s.21-.07.21-.21zm-1.02 0v-3.75c0-.14-.07-.21-.21-.21s-.21.07-.21.21v3.75c0 .14.07.21.21.21s.21-.07.21-.21z"/></svg>
                     SoundCloud
                 </a>
             </div>
         </div>
     </div>
 
-    <!-- Фоновая музыка -->
     <audio id="bgMusic" loop preload="auto">
         <source src="/music.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-        console.log('Скрипт загружен');
-        
         const introScreen = document.getElementById('introScreen');
         const mainContent = document.getElementById('mainContent');
         const enterBtn = document.getElementById('enterBtn');
         const bgMusic = document.getElementById('bgMusic');
+        const volumeSlider = document.getElementById('volumeSlider');
 
-        console.log('Элементы найдены:', {
-            introScreen: !!introScreen,
-            mainContent: !!mainContent,
-            enterBtn: !!enterBtn,
-            bgMusic: !!bgMusic
-        });
-
-        // Предзагрузка музыки
         bgMusic.load();
+        bgMusic.volume = 0.5;
+
+        volumeSlider.addEventListener('input', () => {
+            bgMusic.volume = volumeSlider.value;
+        });
 
         function startExperience() {
-            console.log('Кнопка нажата!');
-            
-            // Пытаемся включить музыку
-            bgMusic.play()
-                .then(() => {
-                    console.log('✓ Музыка запущена');
-                })
-                .catch(error => {
-                    console.error('✗ Ошибка музыки:', error);
-                });
-            
-            // Плавно скрываем экран приветствия
+            bgMusic.play().catch(()=>{});
             introScreen.classList.add('fade-out');
-            
-            // Показываем основной контент
             mainContent.classList.add('visible');
-            
-            // Удаляем экран приветствия из DOM после анимации
+            setTimeout(() => { introScreen.style.display = 'none'; }, 1200);
+
             setTimeout(() => {
-                introScreen.style.display = 'none';
-                console.log('Экран приветствия скрыт');
-            }, 1200);
+                alert('Музыка установлена на 50%. Используй ползунок, чтобы изменить громкость.');
+            }, 500);
         }
 
-        // Несколько способов привязки события
         enterBtn.onclick = startExperience;
-        enterBtn.addEventListener('click', function(e) {
-            console.log('Click event triggered');
-        });
         enterBtn.addEventListener('touchstart', startExperience);
 
-        // Попытка возобновить музыку при любом взаимодействии
         document.addEventListener('click', () => {
             if (bgMusic.paused && !introScreen.classList.contains('fade-out')) {
-                console.log('Попытка повторного запуска музыки');
-                bgMusic.play().catch(e => console.log('Autoplay prevented:', e));
+                bgMusic.play().catch(()=>{});
             }
         });
-
-        console.log('Все обработчики установлены');
     </script>
 </body>
 </html>
